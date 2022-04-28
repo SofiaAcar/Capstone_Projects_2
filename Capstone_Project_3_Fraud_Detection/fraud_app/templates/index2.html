@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Credit Card Fraud Prediction</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    body{
+      background-image: url("https://fintechistanbul.org/wp-content/uploads/2021/12/fraud.jpg");
+      background-size:cover; background-repeat: no-repeat;
+      text-align: center;
+      padding: 0px;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: "Raleway", Arial, Helvetica, sans-serif
+    }
+
+    .mySlides {
+      display: none
+    }
+  </style>
+</head>
+
+<body class="w3-content w3-border-left w3-border-right">
+
+  <!-- Sidebar/menu -->
+  <nav class="w3-sidebar w3-light-grey w3-collapse w3-top" style="z-index:3;width:260px" id="mySidebar">
+    <div class="w3-container w3-display-container w3-padding-16">
+      <i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-transparent w3-display-topright"></i>
+      <h3>Select Values</h3>
+
+      <hr>
+
+      <form action="{{ url_for('predict')}}" method="post">
+        <h4>Enter values between -30 --- 30</h4>
+        <label for="V14">V14</label>
+        <input class="w3-input w3-border" type="int" name="V14" value="-4.289" min="-30" max="30">
+        <label for="V10">V10</label>
+        <input class="w3-input w3-border" type="int" name="V10" value="-2.772" min="-30" max="30">
+        <label for="V17">V17</label>
+        <input class="w3-input w3-border" type="int" name="V17" value="-2.830" min="-30" max="30">
+        <label for="V12">V12</label>
+        <input class="w3-input w3-border" type="int" name="V12" value="-2.900" min="-30" max="30">
+        <label for="V16">V16</label>
+        <input class="w3-input w3-border" type="float" name="V16" value="-1.141" min="-30" max="30">
+        <label for="V11">V11</label>
+        <input class="w3-input w3-border" type="float" name="V11" value="3.998" min="-30" max="30">
+        <p><button class="w3-button w3-block w3-green w3-left-align" type="submit">Predict Transaction</button></p>
+
+      </form>
+    </div>
+  </nav>
+
+  <!-- Top menu on small screens -->
+  <header class="w3-bar w3-top w3-hide-large w3-black w3-xlarge">
+    <span class="w3-bar-item">Fraud Prediction</span>
+    <a href="javascript:void(0)" class="w3-right w3-bar-item w3-button" onclick="w3_open()"><i
+        class="fa fa-bars"></i></a>
+  </header>
+
+  <!-- Overlay effect when opening sidebar on small screens -->
+  <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu"
+    id="myOverlay"></div>
+
+  <!-- !PAGE CONTENT! -->
+  <div class="w3-main w3-white" style="margin-left:260px">
+
+    <!-- Push down content on small screens -->
+    <div class="w3-hide-large" style="margin-top:50px"></div>
+
+    <!-- Slideshow Header -->
+    <div class="w3-container" id="apartment">
+      <h2 class="w3-text-green">Credit Card Fraud Prediction</h2>
+      <div class="w3-display-container mySlides">
+        <img src="/static/ccfd.jpg" style="width:80%;margin-bottom:-6px">
+        <div class="w3-display-bottomleft w3-container w3-black">
+        </div>
+      </div>
+      <hr>
+      <div class="w3-container">
+        <h4><strong>The status of transaction:</strong></h4>
+        <div class="w3-row w3-large">
+          {% if prediction %}
+          <h3>{{final_features}}</h3>
+          <img src="https://www.feednavigator.com/var/wrbm_gb_food_pharma/storage/images/publications/feed/feednavigator.com/article/2020/02/06/arrests-in-feed-fraud-case-in-the-netherlands/10678914-4-eng-GB/Arrests-in-feed-fraud-case-in-the-Netherlands.jpg" style="width:80%;margin-bottom:-6px">
+          <h3 style="color:red">{{ prediction_text }}</h3>
+
+          {% elif prediction == 0 %}
+          <h3>{{final_features}}</h3>
+          <h3 style="color:green">{{ prediction_text }}</h3>
+          <img src="https://image.shutterstock.com/image-photo/dog-dachshund-black-tan-relaxed-260nw-1128879314.jpg" style="width:80%;margin-bottom:-0.5px">
+          
+          {% endif %}
+        </div>
+
+
+        <!-- End page content -->
+      </div>
+
+
+      <script>
+        // Script to open and close sidebar when on tablets and phones
+        function w3_open() {
+          document.getElementById("mySidebar").style.display = "block";
+          document.getElementById("myOverlay").style.display = "block";
+        }
+
+        function w3_close() {
+          document.getElementById("mySidebar").style.display = "none";
+          document.getElementById("myOverlay").style.display = "none";
+        }
+
+        // Slideshow Apartment Images
+        var slideIndex = 1;
+        showDivs(slideIndex);
+
+        function plusDivs(n) {
+          showDivs(slideIndex += n);
+        }
+
+        function currentDiv(n) {
+          showDivs(slideIndex = n);
+        }
+
+        function showDivs(n) {
+          var i;
+          var x = document.getElementsByClassName("mySlides");
+          var dots = document.getElementsByClassName("demo");
+          if (n > x.length) { slideIndex = 1 }
+          if (n < 1) { slideIndex = x.length }
+          for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+          }
+          for (i = 0; i < dots.length; i++) {
+            dots[i].className = dots[i].className.replace(" w3-opacity-off", "");
+          }
+          x[slideIndex - 1].style.display = "block";
+          dots[slideIndex - 1].className += " w3-opacity-off";
+        }
+      </script>
+
+</body>
+
+</html>
